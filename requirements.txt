@@ -1,0 +1,17 @@
+# Streamlit Cloud Deployment Requirements
+# Optimized for Streamlit Cloud
+
+# Web Framework
+streamlit==1.29.0
+
+# Deep Learning Framework
+tensorflow==2.13.0
+
+# Image Processing
+Pillow==10.1.0
+
+# Scientific Computing
+numpy==1.24.3
+
+# Note: If tensorflow installation fails on Streamlit Cloud, it will automatically
+# fallback to tensorflow-cpu which is lighter and works well for inference
