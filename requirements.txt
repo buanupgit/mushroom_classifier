@@ -1,17 +1,17 @@
 # Streamlit Cloud Deployment Requirements
-# Compatible with Python 3.9-3.13 (Streamlit Cloud uses Python 3.13 by default)
+# Optimized for Streamlit Cloud with Python 3.11
 
 # Web Framework
-streamlit>=1.29.0
+streamlit==1.29.0
 
-# Deep Learning Framework (TensorFlow 2.20.0+ supports Python 3.13)
-tensorflow>=2.20.0
+# Deep Learning Framework (compatible with Python 3.11)
+tensorflow==2.13.0
 
 # Image Processing
-Pillow>=10.0.0
+Pillow==10.1.0
 
-# Scientific Computing (NumPy 2.0+ required for TensorFlow 2.20.0+)
-numpy>=2.0.0
+# Scientific Computing (compatible with TensorFlow 2.13.0)
+numpy<2.0.0,>=1.24.0
 
-# Note: TensorFlow 2.20.0 (released Aug 2025) is the first version with Python 3.13 support
-# It requires NumPy 2.0+ and works seamlessly with Streamlit Cloud's Python 3.13 environment
+# Note: Using Python 3.11 specified in .python-version file
+# TensorFlow 2.13.0 is compatible with Python 3.8-3.11
