@@ -1,5 +1,7 @@
 # Streamlit Cloud Deployment Requirements
-# Optimized for Streamlit Cloud with Python 3.11
+# Optimized for Streamlit Cloud with Python 3.10
+# Python version requirement
+python==3.10.*
 
 # Web Framework
 streamlit==1.29.0
