@@ -38,12 +38,12 @@ class MushroomClassifier:
 
             print(f"Loading model from {self.model_path}...")
 
-            # Import keras_cv for FixedDropout layer
+            # Import FixedDropout from efficientnet package
             try:
-                import keras_cv
-                custom_objects = {'FixedDropout': keras_cv.layers.FixedDropout}
+                from efficientnet.tfkeras import FixedDropout
+                custom_objects = {'FixedDropout': FixedDropout}
             except ImportError:
-                print("Warning: keras_cv not found. Attempting to load without custom objects...")
+                print("Warning: efficientnet package not found. Attempting to load without custom objects...")
                 custom_objects = None
 
             self.model = keras.models.load_model(self.model_path, custom_objects=custom_objects)
@@ -52,7 +52,7 @@ class MushroomClassifier:
 
         except Exception as e:
             print(f"Error loading model: {e}")
-            print("Tip: Ensure keras_cv is installed: pip install keras-cv")
+            print("Tip: Ensure efficientnet is installed: pip install efficientnet")
             self.model = None
             return False
 

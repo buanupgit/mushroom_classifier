@@ -76,19 +76,19 @@ def load_model():
             st.info("Please ensure 'mushroom_model.h5' is in the same directory as this script.")
             return None
 
-        # Import keras_cv for FixedDropout layer
+        # Import FixedDropout from efficientnet package
         try:
-            import keras_cv
-            custom_objects = {'FixedDropout': keras_cv.layers.FixedDropout}
+            from efficientnet.tfkeras import FixedDropout
+            custom_objects = {'FixedDropout': FixedDropout}
         except ImportError:
-            st.warning("keras_cv not found. Attempting to load model without custom objects...")
+            st.warning("efficientnet package not found. Attempting to load model without custom objects...")
             custom_objects = None
 
         model = keras.models.load_model(MODEL_PATH, custom_objects=custom_objects)
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")
-        st.info("💡 Tip: Ensure keras_cv is installed: pip install keras-cv")
+        st.info("💡 Tip: Ensure efficientnet is installed: pip install efficientnet")
         return None
 
 

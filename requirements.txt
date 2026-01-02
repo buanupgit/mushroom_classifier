@@ -7,8 +7,8 @@ streamlit==1.29.0
 # Deep Learning Framework (compatible with Python 3.11)
 tensorflow==2.13.0
 
-# keras-cv for FixedDropout layer support (required by EfficientNetB0 model)
-keras-cv>=0.5.0,<0.7.0
+# EfficientNet package (used during model training for EfficientNetB0)
+efficientnet==1.0.0
 
 # Image Processing
 Pillow==10.1.0
