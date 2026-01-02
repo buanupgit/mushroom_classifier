@@ -37,12 +37,22 @@ class MushroomClassifier:
                 raise FileNotFoundError(f"Model file not found: {self.model_path}")
 
             print(f"Loading model from {self.model_path}...")
-            self.model = keras.models.load_model(self.model_path)
+
+            # Import keras_cv for FixedDropout layer
+            try:
+                import keras_cv
+                custom_objects = {'FixedDropout': keras_cv.layers.FixedDropout}
+            except ImportError:
+                print("Warning: keras_cv not found. Attempting to load without custom objects...")
+                custom_objects = None
+
+            self.model = keras.models.load_model(self.model_path, custom_objects=custom_objects)
             print("Model loaded successfully!")
             return True
 
         except Exception as e:
             print(f"Error loading model: {e}")
+            print("Tip: Ensure keras_cv is installed: pip install keras-cv")
             self.model = None
             return False
 
