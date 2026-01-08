@@ -4,19 +4,21 @@ Optimized for Streamlit Cloud Deployment with Custom EfficientNet Model
 """
 
 import streamlit as st
-import tensorflow as tf
-from tensorflow import keras
-import numpy as np
-from PIL import Image
-import os
 
-# --- 1. PAGE CONFIGURATION ---
+# --- 1. PAGE CONFIGURATION (MUST BE FIRST!) ---
 st.set_page_config(
     page_title="Mushroom Classifier",
     page_icon="🍄",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
+
+# Now import other libraries
+import tensorflow as tf
+from tensorflow import keras
+import numpy as np
+from PIL import Image
+import os
 
 # Custom CSS for better styling
 st.markdown("""
@@ -94,7 +96,7 @@ def load_model():
         )
         return model
     except Exception as e:
-        st.error(f"Error loading model: {e}")
+        st.error(f"Error loading model: {str(e)}")
         st.info("Tip: Make sure your model file is compatible with TensorFlow 2.13.0")
         return None
 
@@ -119,7 +121,7 @@ def preprocess_image(image):
         img_array = np.expand_dims(img_array, axis=0)
         return img_array
     except Exception as e:
-        st.error(f"Error preprocessing image: {e}")
+        st.error(f"Error preprocessing image: {str(e)}")
         return None
 
 # --- 5. PREDICTION LOGIC ---
@@ -150,7 +152,7 @@ def predict_mushroom(model, image):
             'is_poisonous': poisonous_prob > 0.5
         }
     except Exception as e:
-        st.error(f"Error during prediction: {e}")
+        st.error(f"Error during prediction: {str(e)}")
         return None
 
 # --- 6. MAIN APP INTERFACE ---
@@ -181,48 +183,53 @@ def main():
     )
 
     if uploaded_file is not None:
-        image = Image.open(uploaded_file)
+        try:
+            image = Image.open(uploaded_file)
 
-        col1, col2 = st.columns([1, 1])
+            col1, col2 = st.columns([1, 1])
 
-        with col1:
-            st.markdown("#### 📷 Uploaded Image")
-            st.image(image, use_container_width=True)
+            with col1:
+                st.markdown("#### 📷 Uploaded Image")
+                st.image(image, use_container_width=True)
 
-        with col2:
-            st.markdown("#### 🔍 Prediction Results")
-            result = predict_mushroom(model, image)
+            with col2:
+                st.markdown("#### 🔍 Prediction Results")
+                result = predict_mushroom(model, image)
 
-            if result is not None:
-                if result['is_poisonous']:
-                    st.markdown(f"""
-                    <div class="danger-box">
-                        <h2 style="color: #721c24; margin: 0;">☠️ POISONOUS</h2>
-                        <p style="font-size: 1.2rem; margin: 0.5rem 0;">
-                            <strong>Confidence:</strong> {result['confidence']:.2f}%
-                        </p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                else:
-                    st.markdown(f"""
-                    <div class="success-box">
-                        <h2 style="color: #155724; margin: 0;">✅ EDIBLE</h2>
-                        <p style="font-size: 1.2rem; margin: 0.5rem 0;">
-                            <strong>Confidence:</strong> {result['confidence']:.2f}%
-                        </p>
-                    </div>
-                    """, unsafe_allow_html=True)
+                if result is not None:
+                    if result['is_poisonous']:
+                        st.markdown(f"""
+                        <div class="danger-box">
+                            <h2 style="color: #721c24; margin: 0;">☠️ POISONOUS</h2>
+                            <p style="font-size: 1.2rem; margin: 0.5rem 0;">
+                                <strong>Confidence:</strong> {result['confidence']:.2f}%
+                            </p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"""
+                        <div class="success-box">
+                            <h2 style="color: #155724; margin: 0;">✅ EDIBLE</h2>
+                            <p style="font-size: 1.2rem; margin: 0.5rem 0;">
+                                <strong>Confidence:</strong> {result['confidence']:.2f}%
+                            </p>
+                        </div>
+                        """, unsafe_allow_html=True)
 
-                # Probability breakdown
-                st.markdown("#### 📊 Probability Breakdown")
-                col_a, col_b = st.columns(2)
-                with col_a:
-                    st.metric(label="🟢 Edible", value=f"{result['edible_prob']:.2f}%")
-                with col_b:
-                    st.metric(label="🔴 Poisonous", value=f"{result['poisonous_prob']:.2f}%")
+                    # Probability breakdown
+                    st.markdown("#### 📊 Probability Breakdown")
+                    col_a, col_b = st.columns(2)
+                    with col_a:
+                        st.metric(label="🟢 Edible", value=f"{result['edible_prob']:.2f}%")
+                    with col_b:
+                        st.metric(label="🔴 Poisonous", value=f"{result['poisonous_prob']:.2f}%")
 
-                st.progress(result['poisonous_prob'] / 100)
-                st.caption(f"Risk Level: {result['poisonous_prob']:.2f}%")
+                    st.progress(result['poisonous_prob'] / 100)
+                    st.caption(f"Risk Level: {result['poisonous_prob']:.2f}%")
+        
+        except Exception as e:
+            st.error(f"Error processing uploaded file: {str(e)}")
+            st.info("Please try uploading a different image file.")
 
     # Disclaimer
     st.markdown("---")
