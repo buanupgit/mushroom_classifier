@@ -10,15 +10,7 @@ import numpy as np
 from PIL import Image
 import os
 
-# --- 1. CRITICAL: EFFICIENTNET REGISTRATION ---
-# This must be at the top level to ensure 'FixedDropout' is recognized
-try:
-    import efficientnet.tfkeras as efn
-    from efficientnet.tfkeras import FixedDropout
-except ImportError:
-    st.error("The 'efficientnet' package is missing. Ensure it is in your pyproject.toml")
-
-# --- 2. PAGE CONFIGURATION ---
+# --- 1. PAGE CONFIGURATION ---
 st.set_page_config(
     page_title="Mushroom Classifier",
     page_icon="🍄",
@@ -69,19 +61,32 @@ st.markdown("""
 MODEL_PATH = "mushroom_model.h5"
 IMG_SIZE = (224, 224)
 
+# --- 2. CUSTOM DROPOUT CLASS (Required for loading your model) ---
+@keras.utils.register_keras_serializable()
+class FixedDropout(keras.layers.Dropout):
+    """Custom Dropout layer to match EfficientNet's FixedDropout"""
+    def _get_noise_shape(self, inputs):
+        if self.noise_shape is None:
+            return self.noise_shape
+        symbolic_shape = tf.shape(inputs)
+        noise_shape = [symbolic_shape[axis] if shape is None else shape
+                      for axis, shape in enumerate(self.noise_shape)]
+        return tuple(noise_shape)
+
 # --- 3. MODEL LOADING WITH CUSTOM OBJECTS ---
 @st.cache_resource
 def load_model():
     """Load your custom Transfer Learning model with caching"""
     if not os.path.exists(MODEL_PATH):
         st.error(f"❌ Model file not found at: {MODEL_PATH}")
+        st.info("Please upload your 'mushroom_model.h5' file to the repository.")
         return None
     
     try:
-        # custom_objects is required for models based on EfficientNet
+        # Custom objects dictionary to handle the FixedDropout layer
         custom_objects = {'FixedDropout': FixedDropout}
         
-        # We set compile=False because we only need the model for prediction (inference)
+        # Load model without compiling (we only need it for inference)
         model = keras.models.load_model(
             MODEL_PATH, 
             custom_objects=custom_objects, 
@@ -90,6 +95,7 @@ def load_model():
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")
+        st.info("Tip: Make sure your model file is compatible with TensorFlow 2.13.0")
         return None
 
 # --- 4. PREPROCESSING (Matches your training code) ---
@@ -124,7 +130,7 @@ def predict_mushroom(model, image):
         if processed_image is None:
             return None
 
-        with st.spinner("Analyzing mushroom..."):
+        with st.spinner("🔬 Analyzing mushroom..."):
             # Your model outputs a single value via layers.Dense(1, activation='sigmoid')
             prediction = model.predict(processed_image, verbose=0)
 
@@ -155,7 +161,7 @@ def main():
 
     st.markdown("""
     Upload an image of a mushroom to identify if it's **poisonous** or **edible**.
-    This model uses your custom **EfficientNetB0** architecture.
+    This model uses a custom **EfficientNetB0** architecture with transfer learning.
     """)
 
     # Load the model
@@ -191,7 +197,7 @@ def main():
                 if result['is_poisonous']:
                     st.markdown(f"""
                     <div class="danger-box">
-                        <h2 style="color: #721c24; margin: 0;">☠️ Poisonous</h2>
+                        <h2 style="color: #721c24; margin: 0;">☠️ POISONOUS</h2>
                         <p style="font-size: 1.2rem; margin: 0.5rem 0;">
                             <strong>Confidence:</strong> {result['confidence']:.2f}%
                         </p>
@@ -200,7 +206,7 @@ def main():
                 else:
                     st.markdown(f"""
                     <div class="success-box">
-                        <h2 style="color: #155724; margin: 0;">✅ Edible</h2>
+                        <h2 style="color: #155724; margin: 0;">✅ EDIBLE</h2>
                         <p style="font-size: 1.2rem; margin: 0.5rem 0;">
                             <strong>Confidence:</strong> {result['confidence']:.2f}%
                         </p>
@@ -209,8 +215,11 @@ def main():
 
                 # Probability breakdown
                 st.markdown("#### 📊 Probability Breakdown")
-                st.metric(label="🟢 Edible", value=f"{result['edible_prob']:.2f}%")
-                st.metric(label="🔴 Poisonous", value=f"{result['poisonous_prob']:.2f}%")
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    st.metric(label="🟢 Edible", value=f"{result['edible_prob']:.2f}%")
+                with col_b:
+                    st.metric(label="🔴 Poisonous", value=f"{result['poisonous_prob']:.2f}%")
 
                 st.progress(result['poisonous_prob'] / 100)
                 st.caption(f"Risk Level: {result['poisonous_prob']:.2f}%")
@@ -221,17 +230,22 @@ def main():
     <div class="warning-box">
         <h3 style="margin-top: 0;">⚠️ IMPORTANT DISCLAIMER</h3>
         <p>This tool is for <strong>educational purposes only</strong>.
-        Never consume wild mushrooms based solely on AI predictions.
-        Mushroom misidentification can be fatal. Stay safe!</p>
+        <strong>Never consume wild mushrooms based solely on AI predictions.</strong>
+        Mushroom misidentification can be <strong>fatal</strong>. 
+        Always consult with a professional mycologist before consuming any wild mushrooms.</p>
     </div>
     """, unsafe_allow_html=True)
 
     # Footer
     st.markdown("---")
-    st.markdown("### Technology Stack")
-    st.write("- **Architecture**: Custom EfficientNetB0 (Transfer Learning)")
-    st.write("- **Framework**: TensorFlow 2.13.0 & Streamlit")
-    st.write("**Author**: Anup")
+    st.markdown("### 🔬 Technology Stack")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write("- **Model**: EfficientNetB0 (Transfer Learning)")
+        st.write("- **Framework**: TensorFlow 2.13.0")
+    with col2:
+        st.write("- **Interface**: Streamlit")
+        st.write("- **Author**: Anup")
 
 if __name__ == "__main__":
     main()
