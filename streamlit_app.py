@@ -1,6 +1,6 @@
 """
 Mushroom Classification App - Streamlit Version
-Optimized for Streamlit Cloud Deployment
+Optimized for Streamlit Cloud Deployment with Custom EfficientNet Model
 """
 
 import streamlit as st
@@ -10,7 +10,15 @@ import numpy as np
 from PIL import Image
 import os
 
-# Page configuration
+# --- 1. CRITICAL: EFFICIENTNET REGISTRATION ---
+# This must be at the top level to ensure 'FixedDropout' is recognized
+try:
+    import efficientnet.tfkeras as efn
+    from efficientnet.tfkeras import FixedDropout
+except ImportError:
+    st.error("The 'efficientnet' package is missing. Ensure it is in your pyproject.toml")
+
+# --- 2. PAGE CONFIGURATION ---
 st.set_page_config(
     page_title="Mushroom Classifier",
     page_icon="🍄",
@@ -21,9 +29,7 @@ st.set_page_config(
 # Custom CSS for better styling
 st.markdown("""
     <style>
-    .main {
-        padding: 2rem;
-    }
+    .main { padding: 2rem; }
     .stButton>button {
         width: 100%;
         background-color: #2ecc71;
@@ -34,9 +40,7 @@ st.markdown("""
         border: none;
         font-weight: bold;
     }
-    .stButton>button:hover {
-        background-color: #27ae60;
-    }
+    .stButton>button:hover { background-color: #27ae60; }
     .success-box {
         padding: 1.5rem;
         border-radius: 10px;
@@ -62,127 +66,102 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Configuration
-MODEL_PATH = "mushroom_model.h5"  # Model should be in same directory for Streamlit Cloud
+MODEL_PATH = "mushroom_model.h5"
 IMG_SIZE = (224, 224)
-CLASS_NAMES = ["Edible", "Poisonous"]
 
-
+# --- 3. MODEL LOADING WITH CUSTOM OBJECTS ---
 @st.cache_resource
 def load_model():
-    """Load model with caching to avoid reloading"""
+    """Load your custom Transfer Learning model with caching"""
+    if not os.path.exists(MODEL_PATH):
+        st.error(f"❌ Model file not found at: {MODEL_PATH}")
+        return None
+    
     try:
-        if not os.path.exists(MODEL_PATH):
-            st.error(f"❌ Model file not found at: {MODEL_PATH}")
-            st.info("Please ensure 'mushroom_model.h5' is in the same directory as this script.")
-            return None
-
-        # Import FixedDropout from efficientnet package
-        try:
-            from efficientnet.tfkeras import FixedDropout
-            custom_objects = {'FixedDropout': FixedDropout}
-        except ImportError:
-            st.warning("efficientnet package not found. Attempting to load model without custom objects...")
-            custom_objects = None
-
-        model = keras.models.load_model(MODEL_PATH, custom_objects=custom_objects)
+        # custom_objects is required for models based on EfficientNet
+        custom_objects = {'FixedDropout': FixedDropout}
+        
+        # We set compile=False because we only need the model for prediction (inference)
+        model = keras.models.load_model(
+            MODEL_PATH, 
+            custom_objects=custom_objects, 
+            compile=False
+        )
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")
-        st.info("💡 Tip: Ensure efficientnet is installed: pip install efficientnet")
         return None
 
-
+# --- 4. PREPROCESSING (Matches your training code) ---
 def preprocess_image(image):
     """
-    Preprocess image for EfficientNetB0 model.
-    Accepts any size image and resizes to 224x224.
+    Preprocess image for your custom EfficientNetB0 model.
+    Includes normalization (1./255) as used in your training ImageDataGenerator.
     """
     try:
-        # Convert to PIL Image if necessary
-        if isinstance(image, np.ndarray):
-            image = Image.fromarray(image.astype('uint8'))
-
-        # Convert to RGB if image has alpha channel or is grayscale
         if image.mode != 'RGB':
             image = image.convert('RGB')
 
-        # Resize to 224x224 (required by EfficientNetB0)
+        # Resize to 224x224 (your target_size)
         image = image.resize(IMG_SIZE, Image.LANCZOS)
-
-        # Convert to numpy array
         img_array = np.array(image)
 
-        # Normalize pixel values to [0, 1]
+        # Normalize pixel values to [0, 1] (Matches rescale=1./255)
         img_array = img_array.astype('float32') / 255.0
 
         # Add batch dimension
         img_array = np.expand_dims(img_array, axis=0)
-
         return img_array
-
     except Exception as e:
         st.error(f"Error preprocessing image: {e}")
         return None
 
-
+# --- 5. PREDICTION LOGIC ---
 def predict_mushroom(model, image):
-    """Make prediction on mushroom image"""
+    """Make prediction using the Sigmoid output of your model"""
     try:
-        # Preprocess the image
         processed_image = preprocess_image(image)
-
         if processed_image is None:
             return None
 
-        # Make prediction
         with st.spinner("Analyzing mushroom..."):
+            # Your model outputs a single value via layers.Dense(1, activation='sigmoid')
             prediction = model.predict(processed_image, verbose=0)
 
-        # Get probability for poisonous (class 1)
+        # Class 0 = Edible, Class 1 = Poisonous (based on standard binary flow)
         poisonous_prob = float(prediction[0][0])
-
-        # Calculate edible probability (class 0)
         edible_prob = 1.0 - poisonous_prob
 
-        # Determine the predicted class
+        # Decision threshold at 0.5
         predicted_class = "Poisonous" if poisonous_prob > 0.5 else "Edible"
         confidence = max(poisonous_prob, edible_prob) * 100
 
-        result = {
+        return {
             'prediction': predicted_class,
             'confidence': confidence,
             'edible_prob': edible_prob * 100,
             'poisonous_prob': poisonous_prob * 100,
             'is_poisonous': poisonous_prob > 0.5
         }
-
-        return result
-
     except Exception as e:
         st.error(f"Error during prediction: {e}")
         return None
 
-
-# Main App
+# --- 6. MAIN APP INTERFACE ---
 def main():
-    # Header
     st.title("🍄 Mushroom Classification")
     st.markdown("### Is it Poisonous or Edible?")
     st.markdown("---")
 
-    # Description
     st.markdown("""
     Upload an image of a mushroom to identify if it's **poisonous** or **edible**.
-
-    This model uses **EfficientNetB0** architecture trained on mushroom images.
-    Images will be automatically resized to 224x224 pixels.
+    This model uses your custom **EfficientNetB0** architecture.
     """)
 
-    # Load model
+    # Load the model
     model = load_model()
 
     if model is None:
-        st.error("⚠️ Cannot proceed without a valid model. Please check the model file.")
         st.stop()
 
     st.success("✅ Model loaded successfully!")
@@ -196,24 +175,19 @@ def main():
     )
 
     if uploaded_file is not None:
-        # Display the uploaded image
         image = Image.open(uploaded_file)
 
         col1, col2 = st.columns([1, 1])
 
         with col1:
             st.markdown("#### 📷 Uploaded Image")
-            st.image(image, use_column_width=True)
-            st.caption(f"Size: {image.size[0]}x{image.size[1]} pixels")
+            st.image(image, use_container_width=True)
 
         with col2:
             st.markdown("#### 🔍 Prediction Results")
-
-            # Make prediction
             result = predict_mushroom(model, image)
 
             if result is not None:
-                # Display result
                 if result['is_poisonous']:
                     st.markdown(f"""
                     <div class="danger-box">
@@ -235,72 +209,29 @@ def main():
 
                 # Probability breakdown
                 st.markdown("#### 📊 Probability Breakdown")
-
-                col_a, col_b = st.columns(2)
-
-                with col_a:
-                    st.metric(
-                        label="🟢 Edible",
-                        value=f"{result['edible_prob']:.2f}%"
-                    )
-
-                with col_b:
-                    st.metric(
-                        label="🔴 Poisonous",
-                        value=f"{result['poisonous_prob']:.2f}%"
-                    )
-
-                # Progress bars
-                st.markdown("##### Confidence Visualization")
-                st.progress(result['edible_prob'] / 100)
-                st.caption(f"Edible: {result['edible_prob']:.2f}%")
+                st.metric(label="🟢 Edible", value=f"{result['edible_prob']:.2f}%")
+                st.metric(label="🔴 Poisonous", value=f"{result['poisonous_prob']:.2f}%")
 
                 st.progress(result['poisonous_prob'] / 100)
-                st.caption(f"Poisonous: {result['poisonous_prob']:.2f}%")
+                st.caption(f"Risk Level: {result['poisonous_prob']:.2f}%")
 
     # Disclaimer
     st.markdown("---")
     st.markdown("""
     <div class="warning-box">
         <h3 style="margin-top: 0;">⚠️ IMPORTANT DISCLAIMER</h3>
-        <p>
-            This tool is for <strong>educational purposes only</strong>.
-            Never consume wild mushrooms based solely on AI predictions.
-            Always consult with a professional mycologist or expert before
-            consuming any wild mushrooms.
-        </p>
-        <p style="margin-bottom: 0;">
-            <strong>Mushroom misidentification can be fatal. Stay safe!</strong>
-        </p>
+        <p>This tool is for <strong>educational purposes only</strong>.
+        Never consume wild mushrooms based solely on AI predictions.
+        Mushroom misidentification can be fatal. Stay safe!</p>
     </div>
     """, unsafe_allow_html=True)
 
     # Footer
     st.markdown("---")
-    st.markdown("""
-    ### About This Model
-
-    - **Architecture**: EfficientNetB0 (Transfer Learning)
-    - **Training Data**: Kaggle Mushroom Classification Dataset
-    - **Input Size**: 224x224 pixels (auto-resized)
-    - **Classes**: Edible (0) and Poisonous (1)
-
-    ### Technology Stack
-    - TensorFlow/Keras
-    - EfficientNet
-    - Streamlit
-
-    ### Dataset Source
-    [Kaggle Mushroom Classification Dataset](https://www.kaggle.com/datasets/zedsden/mushroom-classification-dataset)
-
-    ### Authors
-    **Anup**
-
-    ---
-
-    Made with ❤️ for mushroom enthusiasts and ML practitioners
-    """)
-
+    st.markdown("### Technology Stack")
+    st.write("- **Architecture**: Custom EfficientNetB0 (Transfer Learning)")
+    st.write("- **Framework**: TensorFlow 2.13.0 & Streamlit")
+    st.write("**Author**: Anup")
 
 if __name__ == "__main__":
     main()
