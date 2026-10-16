@@ -1,0 +1,44 @@
+[
+  {
+    "file": "amanita.jpg",
+    "tensorflow": 1,
+    "browser": 1,
+    "absoluteError": 0,
+    "classAgreement": true
+  },
+  {
+    "file": "amanita.png",
+    "tensorflow": 1,
+    "browser": 1,
+    "absoluteError": 0,
+    "classAgreement": true
+  },
+  {
+    "file": "amanita.webp",
+    "tensorflow": 1,
+    "browser": 1,
+    "absoluteError": 0,
+    "classAgreement": true
+  },
+  {
+    "file": "boletus.jpg",
+    "tensorflow": 0.210767462849617,
+    "browser": 0.2107694149017334,
+    "absoluteError": 0.000001952052116394043,
+    "classAgreement": true
+  },
+  {
+    "file": "boletus.png",
+    "tensorflow": 0.2056908905506134,
+    "browser": 0.20569050312042236,
+    "absoluteError": 3.8743019104003906e-7,
+    "classAgreement": true
+  },
+  {
+    "file": "boletus.webp",
+    "tensorflow": 0.2056908905506134,
+    "browser": 0.20569050312042236,
+    "absoluteError": 3.8743019104003906e-7,
+    "classAgreement": true
+  }
+]

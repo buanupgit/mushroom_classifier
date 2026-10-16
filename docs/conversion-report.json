@@ -1,0 +1,1084 @@
+{
+  "tensorflow": "2.13.0",
+  "keras": "2.13.1",
+  "tf2onnx": "1.16.1",
+  "onnxruntime": "1.20.1",
+  "source_sha256": "0bb68b945c762e201f2b5e378b535f6a7b89ae38a9619acd69db04f77de06237",
+  "input_shape": [
+    null,
+    224,
+    224,
+    3
+  ],
+  "output_shape": [
+    null,
+    1
+  ],
+  "parameters": 4377757,
+  "last_layer": {
+    "name": "dense_3",
+    "trainable": true,
+    "dtype": "float32",
+    "units": 1,
+    "activation": "sigmoid",
+    "use_bias": true,
+    "kernel_initializer": {
+      "module": "keras.initializers",
+      "class_name": "GlorotUniform",
+      "config": {
+        "seed": null
+      },
+      "registered_name": null
+    },
+    "bias_initializer": {
+      "module": "keras.initializers",
+      "class_name": "Zeros",
+      "config": {},
+      "registered_name": null
+    },
+    "kernel_regularizer": null,
+    "bias_regularizer": null,
+    "activity_regularizer": null,
+    "kernel_constraint": null,
+    "bias_constraint": null
+  },
+  "layers": [
+    {
+      "name": "input_2",
+      "type": "InputLayer"
+    },
+    {
+      "name": "stem_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "stem_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "stem_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block1a_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block1a_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block1a_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block1a_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block1a_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block1a_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block1a_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block1a_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block1a_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block1a_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block2a_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block2a_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block2a_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block2a_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block2a_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block2a_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block2a_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block2a_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block2a_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block2a_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block2a_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block2a_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block2a_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block2b_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block2b_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block2b_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block2b_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block2b_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block2b_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block2b_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block2b_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block2b_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block2b_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block2b_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block2b_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block2b_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block2b_drop",
+      "type": "FixedDropout"
+    },
+    {
+      "name": "block2b_add",
+      "type": "Add"
+    },
+    {
+      "name": "block3a_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block3a_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block3a_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block3a_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block3a_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block3a_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block3a_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block3a_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block3a_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block3a_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block3a_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block3a_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block3a_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block3b_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block3b_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block3b_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block3b_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block3b_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block3b_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block3b_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block3b_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block3b_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block3b_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block3b_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block3b_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block3b_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block3b_drop",
+      "type": "FixedDropout"
+    },
+    {
+      "name": "block3b_add",
+      "type": "Add"
+    },
+    {
+      "name": "block4a_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block4a_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block4a_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block4a_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block4a_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block4a_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block4a_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block4a_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block4a_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block4a_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block4a_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block4a_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block4a_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block4b_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block4b_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block4b_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block4b_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block4b_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block4b_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block4b_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block4b_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block4b_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block4b_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block4b_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block4b_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block4b_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block4b_drop",
+      "type": "FixedDropout"
+    },
+    {
+      "name": "block4b_add",
+      "type": "Add"
+    },
+    {
+      "name": "block4c_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block4c_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block4c_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block4c_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block4c_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block4c_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block4c_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block4c_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block4c_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block4c_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block4c_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block4c_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block4c_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block4c_drop",
+      "type": "FixedDropout"
+    },
+    {
+      "name": "block4c_add",
+      "type": "Add"
+    },
+    {
+      "name": "block5a_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block5a_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block5a_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block5a_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block5a_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block5a_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block5a_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block5a_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block5a_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block5a_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block5a_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block5a_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block5a_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block5b_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block5b_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block5b_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block5b_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block5b_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block5b_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block5b_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block5b_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block5b_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block5b_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block5b_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block5b_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block5b_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block5b_drop",
+      "type": "FixedDropout"
+    },
+    {
+      "name": "block5b_add",
+      "type": "Add"
+    },
+    {
+      "name": "block5c_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block5c_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block5c_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block5c_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block5c_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block5c_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block5c_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block5c_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block5c_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block5c_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block5c_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block5c_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block5c_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block5c_drop",
+      "type": "FixedDropout"
+    },
+    {
+      "name": "block5c_add",
+      "type": "Add"
+    },
+    {
+      "name": "block6a_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6a_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block6a_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block6a_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block6a_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block6a_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block6a_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block6a_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block6a_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6a_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6a_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block6a_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6a_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block6b_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6b_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block6b_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block6b_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block6b_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block6b_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block6b_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block6b_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block6b_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6b_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6b_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block6b_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6b_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block6b_drop",
+      "type": "FixedDropout"
+    },
+    {
+      "name": "block6b_add",
+      "type": "Add"
+    },
+    {
+      "name": "block6c_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6c_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block6c_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block6c_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block6c_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block6c_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block6c_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block6c_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block6c_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6c_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6c_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block6c_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6c_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block6c_drop",
+      "type": "FixedDropout"
+    },
+    {
+      "name": "block6c_add",
+      "type": "Add"
+    },
+    {
+      "name": "block6d_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6d_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block6d_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block6d_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block6d_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block6d_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block6d_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block6d_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block6d_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6d_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6d_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block6d_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block6d_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block6d_drop",
+      "type": "FixedDropout"
+    },
+    {
+      "name": "block6d_add",
+      "type": "Add"
+    },
+    {
+      "name": "block7a_expand_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block7a_expand_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block7a_expand_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block7a_dwconv",
+      "type": "DepthwiseConv2D"
+    },
+    {
+      "name": "block7a_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "block7a_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "block7a_se_squeeze",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "block7a_se_reshape",
+      "type": "Reshape"
+    },
+    {
+      "name": "block7a_se_reduce",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block7a_se_expand",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block7a_se_excite",
+      "type": "Multiply"
+    },
+    {
+      "name": "block7a_project_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "block7a_project_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "top_conv",
+      "type": "Conv2D"
+    },
+    {
+      "name": "top_bn",
+      "type": "BatchNormalization"
+    },
+    {
+      "name": "top_activation",
+      "type": "Activation"
+    },
+    {
+      "name": "global_average_pooling2d_1",
+      "type": "GlobalAveragePooling2D"
+    },
+    {
+      "name": "dense_2",
+      "type": "Dense"
+    },
+    {
+      "name": "dropout_1",
+      "type": "Dropout"
+    },
+    {
+      "name": "dense_3",
+      "type": "Dense"
+    }
+  ],
+  "model": {
+    "version": "ec9f22e10094",
+    "url": "/models/mushroom-ec9f22e10094.onnx",
+    "sha256": "ec9f22e100944ff8f4c3ef382172c85e3d3bbc5bbd6f65aac2034413851bc692",
+    "bytes": 17326996,
+    "inputName": "image",
+    "outputName": "dense_3",
+    "inputShape": [
+      1,
+      224,
+      224,
+      3
+    ],
+    "labels": [
+      "Edible",
+      "Poisonous"
+    ],
+    "threshold": 0.5,
+    "labelProvenance": "Existing Streamlit app; training class_indices not supplied."
+  },
+  "real_image_count": 0,
+  "comparisons": [
+    {
+      "sample": "zeros",
+      "tensorflow": 0.6161007881164551,
+      "onnx": 0.6160992980003357,
+      "absolute_error": 1.4901161193847656e-06,
+      "class_agreement": true
+    },
+    {
+      "sample": "ones",
+      "tensorflow": 0.8098964691162109,
+      "onnx": 0.8098926544189453,
+      "absolute_error": 3.814697265625e-06,
+      "class_agreement": true
+    },
+    {
+      "sample": "random-0",
+      "tensorflow": 0.9982471466064453,
+      "onnx": 0.9982471466064453,
+      "absolute_error": 0.0,
+      "class_agreement": true
+    },
+    {
+      "sample": "random-1",
+      "tensorflow": 0.9981639385223389,
+      "onnx": 0.9981639385223389,
+      "absolute_error": 0.0,
+      "class_agreement": true
+    },
+    {
+      "sample": "random-2",
+      "tensorflow": 0.9993669390678406,
+      "onnx": 0.9993669986724854,
+      "absolute_error": 5.960464477539063e-08,
+      "class_agreement": true
+    },
+    {
+      "sample": "random-3",
+      "tensorflow": 0.9990124106407166,
+      "onnx": 0.9990124106407166,
+      "absolute_error": 0.0,
+      "class_agreement": true
+    },
+    {
+      "sample": "random-4",
+      "tensorflow": 0.9902923107147217,
+      "onnx": 0.9902923107147217,
+      "absolute_error": 0.0,
+      "class_agreement": true
+    },
+    {
+      "sample": "random-5",
+      "tensorflow": 0.9967147707939148,
+      "onnx": 0.9967148303985596,
+      "absolute_error": 5.960464477539063e-08,
+      "class_agreement": true
+    },
+    {
+      "sample": "random-6",
+      "tensorflow": 0.9986850619316101,
+      "onnx": 0.9986850023269653,
+      "absolute_error": 5.960464477539063e-08,
+      "class_agreement": true
+    },
+    {
+      "sample": "random-7",
+      "tensorflow": 0.9900100231170654,
+      "onnx": 0.990010142326355,
+      "absolute_error": 1.1920928955078125e-07,
+      "class_agreement": true
+    },
+    {
+      "sample": "reference.png",
+      "tensorflow": 0.4355597198009491,
+      "onnx": 0.43556201457977295,
+      "absolute_error": 2.294778823852539e-06,
+      "class_agreement": true
+    }
+  ],
+  "max_absolute_error": 3.814697265625e-06
+}

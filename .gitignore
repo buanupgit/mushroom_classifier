@@ -1,0 +1,10 @@
+.venv-convert/
+__pycache__/
+web/node_modules/
+web/.next/
+web/out/
+web/test-results/
+web/playwright-report/
+web/public/runtime/
+.vercel/
+.env*

@@ -1,0 +1,47 @@
+{
+  "note": "Two source photographs in three formats; numerical smoke tests, not accuracy evaluation.",
+  "comparisons": [
+    {
+      "file": "amanita.jpg",
+      "tensorflow": 1.0,
+      "onnx": 1.0,
+      "absoluteError": 0.0,
+      "classAgreement": true
+    },
+    {
+      "file": "amanita.png",
+      "tensorflow": 1.0,
+      "onnx": 1.0,
+      "absoluteError": 0.0,
+      "classAgreement": true
+    },
+    {
+      "file": "amanita.webp",
+      "tensorflow": 1.0,
+      "onnx": 1.0,
+      "absoluteError": 0.0,
+      "classAgreement": true
+    },
+    {
+      "file": "boletus.jpg",
+      "tensorflow": 0.210767462849617,
+      "onnx": 0.21076971292495728,
+      "absoluteError": 2.250075340270996e-06,
+      "classAgreement": true
+    },
+    {
+      "file": "boletus.png",
+      "tensorflow": 0.2056908905506134,
+      "onnx": 0.20569142699241638,
+      "absoluteError": 5.364418029785156e-07,
+      "classAgreement": true
+    },
+    {
+      "file": "boletus.webp",
+      "tensorflow": 0.2056908905506134,
+      "onnx": 0.20569142699241638,
+      "absoluteError": 5.364418029785156e-07,
+      "classAgreement": true
+    }
+  ]
+}

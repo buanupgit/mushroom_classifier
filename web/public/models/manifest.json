@@ -1,0 +1,20 @@
+{
+  "version": "ec9f22e10094",
+  "url": "/models/mushroom-ec9f22e10094.onnx",
+  "sha256": "ec9f22e100944ff8f4c3ef382172c85e3d3bbc5bbd6f65aac2034413851bc692",
+  "bytes": 17326996,
+  "inputName": "image",
+  "outputName": "dense_3",
+  "inputShape": [
+    1,
+    224,
+    224,
+    3
+  ],
+  "labels": [
+    "Edible",
+    "Poisonous"
+  ],
+  "threshold": 0.5,
+  "labelProvenance": "Existing Streamlit app; training class_indices not supplied."
+}

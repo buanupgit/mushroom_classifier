@@ -1,0 +1,55 @@
+{
+  "url": "https://mushroom-atlas.vercel.app",
+  "verifiedAt": "2026-10-16T23:43:14.055Z",
+  "modelVersion": "ec9f22e10094",
+  "modelBytes": 17326996,
+  "cacheControl": "public, max-age=31536000, immutable",
+  "manifestCacheControl": "public, max-age=0, must-revalidate",
+  "comparisons": [
+    {
+      "file": "amanita.jpg",
+      "tensorflow": 1,
+      "browser": 1,
+      "absoluteError": 0,
+      "timing": "Inference\n85 ms\nTotal processing\n423 ms"
+    },
+    {
+      "file": "amanita.png",
+      "tensorflow": 1,
+      "browser": 1,
+      "absoluteError": 0,
+      "timing": "Inference\n88 ms\nTotal processing\n120 ms"
+    },
+    {
+      "file": "amanita.webp",
+      "tensorflow": 1,
+      "browser": 1,
+      "absoluteError": 0,
+      "timing": "Inference\n76 ms\nTotal processing\n107 ms"
+    },
+    {
+      "file": "boletus.jpg",
+      "tensorflow": 0.210767462849617,
+      "browser": 0.2107694149017334,
+      "absoluteError": 0.000001952052116394043,
+      "timing": "Inference\n68 ms\nTotal processing\n467 ms"
+    },
+    {
+      "file": "boletus.png",
+      "tensorflow": 0.2056908905506134,
+      "browser": 0.20569050312042236,
+      "absoluteError": 3.8743019104003906e-7,
+      "timing": "Inference\n67 ms\nTotal processing\n96 ms"
+    },
+    {
+      "file": "boletus.webp",
+      "tensorflow": 0.2056908905506134,
+      "browser": 0.20569050312042236,
+      "absoluteError": 3.8743019104003906e-7,
+      "timing": "Inference\n66 ms\nTotal processing\n101 ms"
+    }
+  ],
+  "browserErrors": [],
+  "externalRequests": [],
+  "allRequestsGet": true
+}

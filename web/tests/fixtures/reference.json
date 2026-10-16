@@ -1,0 +1,7 @@
+{
+  "sample": "reference.png",
+  "tensorflow": 0.4355597198009491,
+  "onnx": 0.43556201457977295,
+  "absolute_error": 2.294778823852539e-06,
+  "class_agreement": true
+}

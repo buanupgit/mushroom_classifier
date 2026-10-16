@@ -1,0 +1,93 @@
+{
+  "environment": "Local Windows desktop, headless Chromium, localhost, no network throttling; not a deployed/mobile-device benchmark",
+  "visits": [
+    {
+      "visit": "cold",
+      "ready": {
+        "type": "ready",
+        "version": "ec9f22e10094",
+        "bytes": 17326996,
+        "cached": false,
+        "downloadMs": 127,
+        "initMs": 404,
+        "at": 1299.7000000029802
+      },
+      "results": [
+        {
+          "type": "result",
+          "id": 1,
+          "score": 0.20569050312042236,
+          "preprocessMs": 42.399999998509884,
+          "inferenceMs": 88.10000000149012,
+          "totalMs": 130.5,
+          "at": 1523.7999999970198
+        },
+        {
+          "type": "result",
+          "id": 2,
+          "score": 0.20569050312042236,
+          "preprocessMs": 26.100000001490116,
+          "inferenceMs": 62.19999999552965,
+          "totalMs": 88.29999999701977,
+          "at": 1894.8999999985099
+        }
+      ],
+      "paints": [
+        {
+          "name": "first-paint",
+          "ms": 108
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 108
+        }
+      ],
+      "jsHeapBytes": 10000000,
+      "note": "JS heap snapshot excludes total WASM/browser memory; this is not peak memory."
+    },
+    {
+      "visit": "warm",
+      "ready": {
+        "type": "ready",
+        "version": "ec9f22e10094",
+        "bytes": 17326996,
+        "cached": true,
+        "downloadMs": 24.700000002980232,
+        "initMs": 371.3999999985099,
+        "at": 1046.8999999985099
+      },
+      "results": [
+        {
+          "type": "result",
+          "id": 1,
+          "score": 0.20569050312042236,
+          "preprocessMs": 36.70000000298023,
+          "inferenceMs": 80.89999999850988,
+          "totalMs": 117.60000000149012,
+          "at": 1234.3000000044703
+        },
+        {
+          "type": "result",
+          "id": 2,
+          "score": 0.20569050312042236,
+          "preprocessMs": 26.19999999552965,
+          "inferenceMs": 62.80000000447035,
+          "totalMs": 89,
+          "at": 1587.5
+        }
+      ],
+      "paints": [
+        {
+          "name": "first-paint",
+          "ms": 32
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 32
+        }
+      ],
+      "jsHeapBytes": 10000000,
+      "note": "JS heap snapshot excludes total WASM/browser memory; this is not peak memory."
+    }
+  ]
+}
