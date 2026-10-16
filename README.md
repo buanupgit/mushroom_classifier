@@ -1,246 +1,117 @@
-# 🚀 Deployment Folder - Streamlit Cloud
+# Mushroom Atlas
 
-This folder contains **ONLY** the files needed to deploy your mushroom classifier to **Streamlit Cloud**.
+**Live website: https://mushroom-atlas.vercel.app**
 
----
+A Next.js portfolio website that runs the existing EfficientNetB0 mushroom classifier locally in the browser. The original TensorFlow model and Streamlit application are preserved.
 
-## 📦 What's Inside
+![Desktop preview](docs/desktop.png)
 
-- ✅ **streamlit_app.py** - Main Streamlit application
-- ✅ **requirements.txt** - Python dependencies for Streamlit Cloud
-- ✅ **config.toml** - Streamlit theme configuration (optional)
-- ✅ **mushroom_model.h5** - Your trained model (4.7 MB)
-- ✅ **utils.py** - Helper functions (optional)
-- ✅ **STREAMLIT_DEPLOYMENT.md** - Complete deployment guide
+## Run the website
 
----
+Node.js 22 is recommended. From the repository root:
 
-## ⚡ Quick Start (10 Minutes)
-
-### Step 1: Test Locally (3 min)
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the app
-streamlit run streamlit_app.py
+```sh
+cd web
+npm install
+npm run dev
 ```
 
-Browser opens at: http://localhost:8501
+Open the URL printed by Next.js. The page renders before the model loads. All runtime assets are served locally; uploaded images stay in the browser.
 
-### Step 2: Push to GitHub (3 min)
-
-```bash
-cd deployment
-
-# Initialize git
-git init
-
-# Install Git LFS (for large model file)
-git lfs install
-git lfs track "*.h5"
-
-# Commit files
-git add .
-git commit -m "Mushroom classifier for Streamlit"
-
-# Push to GitHub
-git remote add origin https://github.com/YOUR_USERNAME/mushroom-classifier.git
-git branch -M main
-git push -u origin main
+```sh
+npm run lint
+npm run typecheck
+npm run build
+npm run preview
 ```
 
-### Step 3: Deploy on Streamlit Cloud (4 min)
+The production preview serves `web/out` at http://127.0.0.1:4173. Deployment does not install or run Python. For static export, use `npm run preview`, not `next start`.
 
-1. Go to: [share.streamlit.io](https://share.streamlit.io)
-2. Sign in with GitHub
-3. Click "New app"
-4. Select your repository
-5. Main file: `streamlit_app.py`
-6. Click "Deploy"
-7. **Done!** Your app is live!
+## Model and provenance
 
----
+- Original artifact: `mushroom_model.h5`, 27,059,216 bytes, TensorFlow/Keras.
+- Existing app identifies its backbone as EfficientNetB0; the saved graph contains the corresponding convolutional blocks and custom `FixedDropout` layers.
+- Inspected input: `(batch, 224, 224, 3)`, RGB float32. Converted inference fixes batch size to one.
+- 4,377,757 parameters; global average pooling, Dense(256, ReLU), Dropout(0.8), Dense(1, sigmoid) classification head.
+- No input Rescaling/Normalization layer is present. BatchNormalization layers are internal network operations and remain in the converted graph.
+- Preprocessing follows `streamlit_app.py`: RGB conversion, Pillow Lanczos resize to 224 × 224, float32 division by 255. Do not add standard ImageNet normalization.
+- Output `p` maps to `Poisonous` when `p > 0.5`; otherwise `Edible`. Display scores are `1-p` and `p`, not calibrated safety probabilities.
+- **Training notebook, training dataset provenance, original class-index export, split methodology and evaluation metrics are unavailable.** Transfer learning is described by the existing app, but its full training procedure cannot be reconstructed. Labels follow that app and are not independently verified against training data. No accuracy claim is made.
 
-## 📁 Required Files
+## Browser architecture
 
-**Minimum files needed**:
-1. `streamlit_app.py` - Main app
-2. `requirements.txt` - Dependencies
-3. `mushroom_model.h5` - Model file
+Next.js App Router, TypeScript and Tailwind/CSS produce a static export. A dedicated worker loads ONNX Runtime Web 1.20.1 and executes WASM on one CPU thread; cross-origin isolation and a GPU are not required. Rendering, upload controls and navigation stay separate from inference.
 
-**Optional files**:
-- `config.toml` - Custom theme (nice to have)
-- `utils.py` - Helper functions (used by app)
+The model is 17,326,996 bytes (16.52 MiB), served from a content-hashed URL. The worker checks SHA-256, stores validated bytes in Cache Storage, and removes obsolete cached model versions. If browser storage is unavailable, HTTP caching remains available. Vercel headers make versioned model/runtime assets immutable and revalidate the manifest. There are no analytics, authentication, external inference APIs or image uploads.
 
----
+Initial model + WASM transfer is about 28.6 MB before transport compression. Returning visitors can reuse cached assets, subject to browser eviction. Model initialization still runs after each reload. Single-thread WASM is the tested baseline; GPU acceleration and quantization are intentionally deferred until broader validation data supports changing precision or runtime.
 
-## 🌐 Your App Will Be Live At
+### Input limitations
 
-```
-https://YOUR-APP-NAME.streamlit.app
-```
+JPEG, PNG and WebP, up to 16 MiB and 24 megapixels. Transparent images are rejected: canvas cannot retain hidden RGB values the same way Pillow's `convert('RGB')` does. Native image decoders can vary, especially for JPEG, EXIF orientation and color profiles. RGB Lanczos resizing is tested pixel-for-pixel; decoder equality for every possible image is not claimed. Invalid/corrupt uploads, download errors, unsupported browser features and timeouts have visible recovery states.
 
-Example: `https://mushroom-classifier.streamlit.app`
+## Reproduce conversion
 
----
+Python 3.10 is used for the isolated conversion environment. This avoids changing the original Streamlit requirements or depending on Keras 3 compatibility.
 
-## 📝 Important Notes
-
-### Model File
-- **Original name**: `mushroom_classification_dropout0.8_adam0.001_batch128_5layers_removed.h5`
-- **Renamed to**: `mushroom_model.h5` (for simplicity)
-- **Size**: ~4.7 MB
-- **Requires**: Git LFS for GitHub upload
-
-### GitHub Requirements
-- Repository must be **public** (for free tier)
-- Must use **Git LFS** for the model file
-- All files must be in the **same directory**
-
-### Streamlit Cloud Free Tier
-- ✅ Unlimited public apps
-- ✅ 1 GB RAM per app
-- ✅ Automatic HTTPS
-- ✅ Custom subdomain
-- ⚠️ Apps sleep after inactivity (wake up in ~30 sec)
-
----
-
-## 🛠️ Troubleshooting
-
-### "Model file not found"
-**Solution**: Ensure `mushroom_model.h5` is in the same folder as `streamlit_app.py`
-
-### "Git LFS not working"
-**Solution**:
-```bash
-git lfs install
-git lfs track "*.h5"
-git add .gitattributes
+```sh
+python -m venv .venv-convert
+# Windows
+.venv-convert\Scripts\python -m pip install -r scripts/requirements-convert-lock.txt
+.venv-convert\Scripts\python scripts/convert_model.py
+.venv-convert\Scripts\python scripts/validate_real_images.py
 ```
 
-### "Streamlit build fails"
-**Solution**: Check the logs in Streamlit Cloud dashboard. Common issues:
-- Model file not uploaded with Git LFS
-- Wrong file paths
-- Missing dependencies
+On macOS/Linux use `.venv-convert/bin/python`; the Windows freeze includes `tensorflow-intel` and `pyreadline3`, so install the portable direct requirements `scripts/requirements-convert.txt` instead. The exact validated environment is Windows/Python 3.10, TensorFlow 2.13.0, Keras 2.13.1, tf2onnx 1.16.1, ONNX 1.17.0 and ONNX Runtime 1.20.1.
 
-### "App is slow"
-**Cause**: Free tier limitations (1 GB RAM)
+The script loads the custom dropout class, disables training behavior, exports ONNX opset 17, compares outputs and writes a manifest and audit. No weights are retrained. Rebuild the website after regeneration. Remove superseded model files only after verifying the new artifact; retain the original `.h5` reference.
 
-**Solutions**:
-- App caches model (only slow on first load)
-- Use smaller images
-- Apps sleep after inactivity (normal behavior)
+Additional images can be supplied with `scripts/convert_model.py --images PATH`. Use a representative validation dataset when available; the included checks cannot establish accuracy or near-boundary agreement across the original data distribution.
 
----
+## Verification
 
-## 📖 Complete Guide
-
-For detailed instructions, see: **[STREAMLIT_DEPLOYMENT.md](STREAMLIT_DEPLOYMENT.md)**
-
----
-
-## 🎨 Customization
-
-### Change App Title
-Edit line 11 in `streamlit_app.py`:
-```python
-page_title="Your Custom Title"
+```sh
+cd web
+npx playwright install chromium firefox webkit
+npm run build
+npm test
 ```
 
-### Change Theme Colors
-Edit `config.toml`:
-```toml
-[theme]
-primaryColor = "#your-color"
+Tests exercise actual worker inference, exact Lanczos preprocessing, original-TensorFlow comparison, real-image JPEG/PNG/WebP fixtures, corrupt files, manifest failures/retry, transparency rejection, light/dark accessibility, and mobile viewport operation. Browser-engine testing is not physical-device testing.
+
+- [Conversion report](docs/conversion-report.json): 11 synthetic cases, maximum absolute score difference 0.000003815, all class decisions agree.
+- [Real-image reference report](docs/real-image-report.json): two source photographs in three formats, all TensorFlow/ONNX class decisions agree. These are numerical smoke tests, **not an accuracy benchmark**.
+- Per-browser comparison reports are in `docs/`.
+- Test photographs have their own [attribution and licenses](web/tests/fixtures/real/CREDITS.md).
+- [Performance and limitations](docs/VALIDATION.md).
+
+Run `npm run preview` in one terminal, then `npm run benchmark` in another for local cold/warm loading metrics and Lighthouse. This requires Playwright Chromium and a free debugging port 9222. Do not interpret localhost timing as internet download performance.
+
+## Vercel deployment
+
+Import `buanupgit/mushroom_classifier`, select the migration branch, and set **Root Directory to `web`**. Framework preset: **Other** (`framework: null` in `vercel.json`), because Next.js produces a static export. Build: `npm run build`. Output: `out`. No Python build, database or paid inference service is needed.
+
+Or, from `web`:
+
+```sh
+npx vercel login
+npx vercel --prod
 ```
 
-### Add Features
-- Multiple image upload
-- Image history
-- Batch processing
-- Results download
+Authenticate with your own Vercel account; do not put tokens in the repository. Set `NEXT_PUBLIC_SITE_URL` to the canonical URL for social metadata if necessary; Vercel's production URL environment variable is used when available. `web/vercel.json` defines deployment and caching headers.
 
----
+The architecture is suitable for a personal Hobby portfolio within plan quotas. Model and runtime files are each below the documented 100 MB static-file limit. Bandwidth still applies: the first model/runtime download is substantial. See [Vercel limits](https://vercel.com/docs/limits) and [Hobby plan](https://vercel.com/docs/plans/hobby); free hosting is not an unlimited-service guarantee.
 
-## 📊 App Features
+Deployment verified on 17 October 2026 (Europe/Oslo): six real-image fixtures matched the original TensorFlow predictions, with maximum absolute score difference 0.000001953. The public URL loads without authentication, model cache headers are correct, and no external/image-upload requests were observed. See [live verification](docs/live-report.json).
 
-Your deployed app includes:
-- ✅ Beautiful Streamlit UI
-- ✅ Image upload (drag & drop)
-- ✅ Automatic resizing to 224x224
-- ✅ Real-time predictions
-- ✅ Confidence scores
-- ✅ Probability breakdown
-- ✅ Visual progress bars
-- ✅ Mobile responsive
-- ✅ Safety disclaimer
+For future deployments, verify the live model, asset caching headers and a real prediction. To run browser tests against the site set `TEST_BASE_URL` to its HTTPS URL. A successful local build alone does not establish live deployment.
 
----
+## Existing Streamlit app
 
-## 🔄 Updating Your App
+`streamlit_app.py`, `utils.py`, the original `.h5` model and `requirements.txt` are unchanged. The previous README is preserved in [docs/STREAMLIT_README.md](docs/STREAMLIT_README.md), and [STREAMLIT_DEPLOYMENT.md](STREAMLIT_DEPLOYMENT.md) remains available. Neither historical document should be treated as verified current hosting limits or model-size information.
 
-To update your deployed app:
+## Safety and attribution
 
-1. Make changes locally
-2. Test with `streamlit run streamlit_app.py`
-3. Commit and push:
-   ```bash
-   git add .
-   git commit -m "Update app"
-   git push
-   ```
-4. Streamlit Cloud auto-redeploys!
+This project is an educational image-classification demonstration. Its predictions must never be used to determine whether wild mushrooms are safe to eat.
 
----
-
-## 📞 Need Help?
-
-1. **Read**: [STREAMLIT_DEPLOYMENT.md](STREAMLIT_DEPLOYMENT.md)
-2. **Check**: Streamlit docs at [docs.streamlit.io](https://docs.streamlit.io)
-3. **Ask**: Streamlit forum at [discuss.streamlit.io](https://discuss.streamlit.io)
-
----
-
-## ✅ Deployment Checklist
-
-Before deploying:
-- [ ] Tested locally (`streamlit run streamlit_app.py`)
-- [ ] Model file is named `mushroom_model.h5`
-- [ ] All files are in this deployment folder
-- [ ] Created GitHub repository (public)
-- [ ] Installed Git LFS
-- [ ] Pushed to GitHub with Git LFS
-
-After deploying:
-- [ ] App builds successfully
-- [ ] Can access the URL
-- [ ] Image upload works
-- [ ] Predictions are correct
-
----
-
-## 🎉 Success!
-
-Once deployed, your mushroom classifier will be:
-- ✅ Live on the internet
-- ✅ Accessible worldwide
-- ✅ Free forever (public apps)
-- ✅ Auto-maintained by Streamlit
-
-Share your URL and impress everyone! 🍄
-
----
-
-## ⚠️ Disclaimer
-
-This model is for **educational purposes only**. Never consume wild mushrooms based on AI predictions. Always consult a professional mycologist.
-
----
-
-**Made with ❤️ by Anup & Harith**
-
-**Ready to deploy? Follow [STREAMLIT_DEPLOYMENT.md](STREAMLIT_DEPLOYMENT.md)!**
+Original project attribution: Anup & Harith, as recorded in the existing repository. The browser migration preserves their trained artifact. The botanical SVG is an illustrative design asset, not a specimen-identification guide.

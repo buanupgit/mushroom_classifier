@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+.env*
+public/runtime
+tests
+test-results
+playwright-report
+scripts/benchmark.mjs

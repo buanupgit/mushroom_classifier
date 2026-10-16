@@ -1,0 +1,63 @@
+{
+  "score": 0.4355618953704834,
+  "tensorflow": 0.4355597198009491,
+  "absoluteError": 0.000002175569534301758,
+  "timing": "Inference\n80 ms\nTotal processing\n97 ms",
+  "repeatTiming": "Inference\n66 ms\nTotal processing\n78 ms",
+  "first": {
+    "paint": [
+      {
+        "name": "first-paint",
+        "ms": 152
+      },
+      {
+        "name": "first-contentful-paint",
+        "ms": 152
+      }
+    ],
+    "resources": [
+      {
+        "name": "http://127.0.0.1:4173/forest-study.svg",
+        "duration": 8.199999995529652
+      },
+      {
+        "name": "http://127.0.0.1:4173/_next/static/chunks/0v7s0ngplarjz.css",
+        "duration": 11.299999997019768
+      },
+      {
+        "name": "http://127.0.0.1:4173/_next/static/chunks/31qp8jfkw0x2h.js",
+        "duration": 86.5
+      },
+      {
+        "name": "http://127.0.0.1:4173/_next/static/chunks/0etltfi-08v6i.js",
+        "duration": 101.10000000149012
+      },
+      {
+        "name": "http://127.0.0.1:4173/_next/static/chunks/0umf92h1sb77c.js",
+        "duration": 86.60000000149012
+      },
+      {
+        "name": "http://127.0.0.1:4173/_next/static/chunks/turbopack-3-ry682tkyiqk.js",
+        "duration": 86
+      },
+      {
+        "name": "http://127.0.0.1:4173/_next/static/chunks/209aaqjv6z8gh.js",
+        "duration": 142.70000000298023
+      },
+      {
+        "name": "http://127.0.0.1:4173/_next/static/chunks/1_nqqrpl4-jvt.js",
+        "duration": 120.39999999850988
+      },
+      {
+        "name": "http://127.0.0.1:4173/_next/static/chunks/18j2-j_g0as0b.js",
+        "duration": 244.79999999701977
+      },
+      {
+        "name": "http://127.0.0.1:4173/inference-worker.js",
+        "duration": -3.600000001490116
+      }
+    ]
+  },
+  "cacheEntries": 1,
+  "browserErrors": []
+}
